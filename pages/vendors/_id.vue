@@ -26,14 +26,34 @@ import Navbar from '~/components/navbar.vue'
 export default {
     data() {
         return {
-            restaurants: []
+            restaurants: [],
+            title: ""
         };
     },
+    head() {
+    return {
+      title: this.title,
+      meta: [
+        {
+        hid: 'description',
+        name: 'description',
+        content: 'My custom description'
+        }
+      ]
+    }
+  },
     methods: {
         async getById() {
             let res = await fetch(`https://express24.uz/rest/v1/catalog/places/${this.$route.params.id}?width=180&height=180&cacheTime=600&SEO=true`);
             let resJSon = await res.json();
             this.restaurants = resJSon.list;
+            this.getTitle()
+        },
+        getTitle() {
+        this.title = this.restaurants.map(el => {
+                return el.name
+            })
+
         }
     },
     mounted() {

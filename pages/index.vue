@@ -15,7 +15,23 @@ import tabBanner from '~/components/tabBanner.vue'
 import footerVue from '~/components/footer.vue'
 export default {
   components: { tabBanner, NewsAndSales, MainComponent,footerVue },
-
+  data() {
+    return {
+      title: "Сервис доставки эды и товаров"
+    }
+  },
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        {
+        hid: 'description',
+        name: 'description',
+        content: 'My custom description'
+        }
+      ]
+    }
+  }
 }
 </script>
 
