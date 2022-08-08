@@ -1,13 +1,13 @@
 <template>
   <div class="mt-5">
     <h1 class="title text-xl mb-5">Новости и акции</h1>
-    <div class="offers flex items-center justify-between flex-wrap">
-        <div class="offer m-1" v-for="(offer,index) in offers" :key="index">
+    <swiper :options="options" class="offers flex items-center justify-between flex-wrap">
+        <swiper-slide class="offer m-1" v-for="(offer,index) in offers" :key="index">
             <div>
                 <img :src="offer.cover" alt="offer img" class="rounded-lg">
             </div>
-        </div>
-    </div>
+        </swiper-slide>
+    </swiper>
   </div>
 </template>
 
@@ -15,7 +15,14 @@
 export default {
 data() {
     return {
-        offers: []
+        offers: [],
+        options: {
+            slidesPerView: "auto",
+            loopedSlides: 4.5,
+            autoplay: {
+                delay: 5000,
+            },
+        }
     }
 },
 methods : {

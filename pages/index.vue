@@ -4,6 +4,7 @@
    <tab-banner></tab-banner>
    <news-and-sales></news-and-sales>
    <main-component></main-component>
+   <footer-vue></footer-vue>
  </div>
 </template>
 
@@ -11,14 +12,14 @@
 import MainComponent from '~/components/mainComponent.vue'
 import NewsAndSales from '~/components/newsAndSales.vue'
 import tabBanner from '~/components/tabBanner.vue'
+import footerVue from '~/components/footer.vue'
 export default {
-  components: { tabBanner, NewsAndSales },
+  components: { tabBanner, NewsAndSales, MainComponent,footerVue },
 
 }
 </script>
 
-<style>,
-    MainComponent
+<style>
 * {
     margin: 0;
     padding: 0;
