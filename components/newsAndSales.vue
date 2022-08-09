@@ -45,4 +45,9 @@ mounted() {
 .offer img {
     width: 100%;
 }
+@media screen and (max-width: 500px) {
+    .offer {
+        flex-basis: 45%;
+    }
+}
 </style>

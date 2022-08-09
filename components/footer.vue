@@ -89,4 +89,9 @@ nav {
     position: absolute;
     left: 0;
 }
+@media screen and (max-width: 500px) {
+    footer {
+        display: none;
+    }
+}
 </style>

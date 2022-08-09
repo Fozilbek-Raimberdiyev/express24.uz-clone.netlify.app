@@ -29,41 +29,96 @@
 </template>
 
 <script>
+import {mapActions} from "vuex"
 export default {
     data() {
         return {
             categories: [],
             restaurants: [],
             filteredRestaurants: [],
+            markets: [],
+            filteredMarkets: [],
             limit: 21,
             offset: 0,
             categoryId: -1,
             currentIndex: -1,
             options: {
                 slidesPerView: 8,
-            }
+                breakpoints: {
+                    320: {
+                        slidesPerView: 3,
+                        spaceBetween: 20
+                        },
+                        480: {
+                        slidesPerView: 3,
+                        spaceBetween: 30
+                        },
+                        640: {
+                        slidesPerView: 4,
+                        spaceBetween: 40
+                        },
+                        1000: {
+                        slidesPerView: 8,
+                        spaceBetween: 40
+                        }
+                }
+            },
+            currentTab : "restaurant"
         }
     },
     computed : {
         filterByCategories() {
-            if(this.categoryId==-1) {
-                return this.restaurants
-            } else {
-                return this.filteredRestaurants
-            }
+        //    if(this.$store.state.currentTab=="restaurant") {
+        //      if(this.categoryId==-1) {
+        //         return this.restaurants
+        //     } else {
+        //         return this.filteredRestaurants
+        //     }
+        //    } if(this.$store.state.currentTab=="market") {
+        //      if(this.categoryId==-1) {
+        //         return this.markets
+        //     } else {
+        //         return this.filteredMarkets
+        //     }
+        //    }
+        
+        if(this.categoryId==-1 && this.$store.state.currentTab=="restaurant") {
+            console.log("restaurant va tip=-1")
+            return this.restaurants
+        } if(this.categoryId == -1 && this.$store.state.currentTab=="market") {
+            console.log("restaurant va tip = -1 emas")
+            return this.markets
+        } if(this.categoryId!=-1 && this.$store.state.currentTab=="restaurant") {
+            console.log("market va tip = -1")
+            return this.filteredRestaurants
+        } if(this.categoryId!=-1 && this.$store.state.currentTab=="market") {
+            console.log("market va tip = -1 emas")
+            return this.filteredMarkets
+        }
         }
     },
     methods: {
         async getCategories() {
-            let res = await fetch("https://express24.uz/rest/v2/catalog/categories/?root_category_id=1");
-            let resJson  = await res.json();
-            this.categories = resJson.list
+            if(this.$store.state.currentTab=="restaurant") {
+                let res = await fetch("https://express24.uz/rest/v2/catalog/categories/?root_category_id=1");
+                let resJson  = await res.json();
+                this.categories = resJson.list
+            } if(this.$store.state.currentTab=="market") {
+                let res = await fetch("https://express24.uz/rest/v3/catalog/categories/?root_category_id=1");
+                let resJson  = await res.json();
+                this.categories = resJson.list
+            }
         },
         async getRestaurants() {
+           if(this.$store.state.currentTab =="restaurant") {
             let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&limit=21&offset=0&cacheTime=600`);
             let resJson  = await res.json();
             this.restaurants = resJson.places;
-            return this.restaurants;
+           } if(this.$store.state.currentTab=="market") {
+            let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=2&d_width=720&d_height=330&limit=21&offset=0&cacheTime=600`);
+            let resJson  = await res.json();
+            this.markets = resJson.places;
+           }
         },
         rate(item) {
             if(item?.reviews?.count > 500) {
@@ -74,15 +129,27 @@ export default {
         },
         async seeMore() {
             this.offset+=this.limit;
-            if(this.categoryId==-1) {
-            let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&limit=${this.limit}&offset=${this.offset}&cacheTime=600`)
-            let resJson = await res.json();
-            this.restaurants= this.restaurants.concat(resJson.places)
-            }  else {
-            let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&category_id=${this.categoryId}&limit=${this.limit}&offset=${this.offset}&cacheTime=600`);
-            let resJson = await res.json();
-            this.filteredRestaurants= this.filteredRestaurants.concat(resJson.places)
-            }   
+                if(this.$store.state.currentTab =="restaurant") {
+                    if(this.categoryId==-1) {
+                        let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&limit=${this.limit}&offset=${this.offset}&cacheTime=600`)
+                        let resJson = await res.json();
+                        this.restaurants= this.restaurants.concat(resJson.places)
+                        }  else {
+                        let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&category_id=${this.categoryId}&limit=${this.limit}&offset=${this.offset}&cacheTime=600`);
+                        let resJson = await res.json();
+                        this.filteredRestaurants= this.filteredRestaurants.concat(resJson.places)
+            }
+                }  if(this.$store.state.currentTab=="market") {
+                     if(this.categoryId==-1) {
+                        let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=2&d_width=720&d_height=330&limit=${this.limit}&offset=${this.offset}&cacheTime=600`)
+                        let resJson = await res.json();
+                        this.markets= this.markets.concat(resJson.places)
+                        }  else {
+                        let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=2&d_width=720&d_height=330&category_id=${this.categoryId}&limit=${this.limit}&offset=${this.offset}&cacheTime=600`);
+                        let resJson = await res.json();
+                        this.filteredMarkets= this.filteredMarkets.concat(resJson.places)
+                        }  
+                }
             },
         async getCategoryId(element,index) {
             this.categoryId = element.id;
@@ -90,11 +157,18 @@ export default {
             let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&category_id=${this.categoryId}&limit=21&offset=0&cacheTime=600`);
             let resJson = await res.json();
             this.filteredRestaurants = resJson.places;
+        },
+        ...mapActions(["getPlaces"])
+    },
+    watch : {
+        currentTab() {
+            this.getRestaurants()
         }
     },
     mounted() {
         this.getCategories(),
         this.getRestaurants()
+
     }
 }
 </script>
@@ -106,6 +180,10 @@ export default {
     cursor: pointer;
     margin: 10px;
     text-align: center;
+    transition: all ease .3s;
+}
+.tab-btn:hover {
+    background: #FDE61D;
 }
 .tab-btn.active {
     background: #FDE61D;
@@ -163,5 +241,15 @@ export default {
     width: 150px;
     margin: 0 auto;
     display: block;
+}
+@media screen and (max-width: 500px) {
+    .restaurant {
+    flex-basis: 100%;   
+}
+.btn {
+    text-align: left;
+    margin-left: 0;
+    margin-bottom: 2rem;
+}
 }
 </style>

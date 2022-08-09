@@ -46,4 +46,11 @@ export default {
     width: 1150px;
     margin: 0 auto;
 }
+@media screen and (max-width: 500px) {
+  .container {
+    width: 90%;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+}
 </style>

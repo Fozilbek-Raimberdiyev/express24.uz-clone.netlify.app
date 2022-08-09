@@ -1,18 +1,29 @@
 <template>
   <div class="flex items-center mt-10">
     <div class="restaurant h-28 rounded-lg">
-        <p class="title text-lg">Рестораны</p>
+        <p @click="$store.commit('change','restaurant')" class="title text-lg">Рестораны</p>
     </div>
     <div class="market h-28 rounded-lg">
-        <p class="title title-hover text-lg">Маркет</p>
+        <p @click="$store.commit('change','market')" class="title title-hover text-lg">Маркет</p>
     </div>
+    <button @click="seeCurrentTab()">Ko'rish</button>
   </div>
 </template>
 
 <script>
 export default {
-
-}
+    data() {
+        return {
+            currentTab: "restaurant"
+        }
+    },
+    methods : {
+        seeCurrentTab() {
+        console.log(this.$store?.state?.currentTab)    
+    }
+    },
+    
+} 
 </script>
 
 <style scoped>
@@ -47,5 +58,17 @@ export default {
     .title-hover:hover {
         background: #F7E233;
         color: #000;
+    }
+    p {
+        border-radius: 5px;
+    }
+    @media screen and (max-width: 500px) {
+        .restaurant {
+            width: 47%;
+            background-size: cover;
+        }
+        .market {
+            width: 47%;
+        }
     }
 </style>

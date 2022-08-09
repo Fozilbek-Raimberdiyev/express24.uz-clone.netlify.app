@@ -72,6 +72,7 @@ export default {
     display: flex;
     align-items: center;
     margin: 2rem 0;
+    flex-wrap: wrap;
 }
 .info-img {
     flex-basis: 10%;
@@ -108,4 +109,31 @@ export default {
     padding: 3px 15px;
     font-size: 14px;
 }
+    @media screen and (max-width: 500px) {
+        body {
+            overflow-x: hidden;
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+        }
+        .info-img {
+            flex-basis: 30%;
+        }
+        .info-text {
+            flex-basis: 60%;
+        }
+        .info-right {
+            display: block;
+            flex-basis: 90%;
+        }
+        .yellow-btn {
+            width: 100%;
+            margin: 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+    }
 </style>
