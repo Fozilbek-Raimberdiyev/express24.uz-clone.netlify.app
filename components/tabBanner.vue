@@ -1,25 +1,35 @@
 <template>
   <div class="flex items-center mt-10">
     <div class="restaurant h-28 rounded-lg">
-        <p @click="$store.commit('change','restaurant')" class="title text-lg">Рестораны</p>
+        <p @click="changePlace('restaurant')" class="title text-lg" :class="{resActive : currentPlace=='restaurant'}">Рестораны</p>
     </div>
     <div class="market h-28 rounded-lg">
-        <p @click="$store.commit('change','market')" class="title title-hover text-lg">Маркет</p>
+        <p @click="changePlace('market')" class="title text-lg" :class="{marActive : currentPlace=='market'}">Маркет</p>
     </div>
     <button @click="seeCurrentTab()">Ko'rish</button>
   </div>
 </template>
 
 <script>
+import {mapState,mapMutations} from "vuex"
 export default {
     data() {
         return {
-            currentTab: "restaurant"
+
         }
     },
+    computed: {
+        ...mapState([
+            "currentPlace"
+        ])
+    },
     methods : {
+        ...mapMutations([
+            "changePlace"
+        ]),
         seeCurrentTab() {
-        console.log(this.$store?.state?.currentTab)    
+        // console.log(this.$store?.state?.currentTab)   
+        console.log(this.currentPlace) 
     }
     },
     
@@ -50,12 +60,20 @@ export default {
         cursor: pointer;
         font-weight: 600;
     }
-    .title-hover {
+    .title.resActive {
+        background: #F7E233;
+        color: #000;
+    }
+    .title.marActive {
+        background: #F7E233;
+        color: #000;
+    }
+    .title{
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
         transition: all ease .4s;
     }
-    .title-hover:hover {
+    .title:hover {
         background: #F7E233;
         color: #000;
     }

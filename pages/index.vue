@@ -17,7 +17,7 @@ export default {
   components: { tabBanner, NewsAndSales, MainComponent,footerVue },
   data() {
     return {
-      title: "Сервис доставки эды и товаров"
+      title: "Сервис доставки еды и товаров"
     }
   },
   head() {
