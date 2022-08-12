@@ -173,10 +173,10 @@ export default {
   },
   mounted() {
     try{
-        // this.getCategoriesRestaurants();
-        // this.changeLoading(true)
-        // this.getRestaurants();
-        // this.changeLoading(false)
+        this.getCategoriesRestaurants();
+        this.changeLoading(true)
+        this.getRestaurants();
+        this.changeLoading(false)
     } finally {
     }
   },
