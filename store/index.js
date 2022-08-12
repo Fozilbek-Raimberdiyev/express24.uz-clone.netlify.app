@@ -45,13 +45,11 @@ export const state = () => ({
         let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&limit=21&offset=0&cacheTime=600`);
         let resJson  = await res.json();
         ctx.commit("updateRestaurants",resJson.places)
-        console.log("getRestaurants()")
     },
     async getMarkets(ctx) {
         let res = await fetch(`https://express24.uz/rest/v3/catalog/places-meta?root_category_id=2&d_width=720&d_height=330&limit=21&offset=0&cacheTime=600`);
         let resJson  = await res.json();
         ctx.commit("updateMarkets",resJson.places)
-        console.log("getMarkets()")
     },
     async getFilteredPlaces(ctx) {
         // if(ctx.state.currentPlace == "restaurant") {
@@ -87,7 +85,6 @@ export const state = () => ({
                 if(resJson.places.length < 1) {
                     ctx.commit("changeLoading", false)
                 }
-                console.log("getFilteredMarkets")
             } finally {
                 ctx.commit("changeLoading", false)
             }
