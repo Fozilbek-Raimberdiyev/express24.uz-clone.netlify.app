@@ -5,7 +5,9 @@ export const state = () => ({
     markets: [],
     filteredMarkets: [],
     currentId: -1,
-    loading: false
+    currentIndex: -1,
+    loading: false,
+    isOpen :false
   })
   
   export const mutations = {
@@ -32,6 +34,9 @@ export const state = () => ({
     },
     changeLoading(value) {
         state.loading = value
+    },
+    changeIsopen(state,value) {
+        state.isOpen = value
     }
   }
 

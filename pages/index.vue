@@ -13,11 +13,26 @@ import MainComponent from '~/components/mainComponent.vue'
 import NewsAndSales from '~/components/newsAndSales.vue'
 import tabBanner from '~/components/tabBanner.vue'
 import footerVue from '~/components/footer.vue'
+
+import {mapState} from "vuex"
 export default {
   components: { tabBanner, NewsAndSales, MainComponent,footerVue },
   data() {
     return {
-      title: "Сервис доставки еды и товаров"
+      title: "Сервис доставки еды и товаров",
+      isLoading: false
+    }
+  },
+  computed: {
+    ...mapState(["loading"])
+  },
+  watch : {
+    loading(newValue) {
+      if(newValue==true) {
+        this.isLoading = false
+      } else {
+        this.isLoading = true
+      }
     }
   },
   head() {
@@ -31,6 +46,9 @@ export default {
         }
       ]
     }
+  },
+  mounted() {
+    
   }
 }
 </script>
@@ -45,6 +63,9 @@ export default {
 .container {
     width: 1150px;
     margin: 0 auto;
+}
+.container.isLoading {
+  opacity: 0.5;
 }
 @media screen and (max-width: 500px) {
   .container {

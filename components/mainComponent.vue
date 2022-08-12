@@ -1,16 +1,18 @@
 <template>
   <div class="wrapper">
-    <swiper :options="options" class="tab flex flex-wrap items-center mt-10">
+    <div class="container">
+      <swiper :options="options" class="tab flex flex-wrap items-center mt-10">
       <swiper-slide
         class="tab-btn mb-3 mr-3 rounded-xl"
         :class="{ active: currentIndex == index }"
         v-for="(category, index) in categories"
         :key="index"
-        ><span @click="changeCurrentId(category)">{{ category.name }}</span></swiper-slide
-      >
+        @click="currentIndex=index"
+        >
+        <span @click="changeCurrentId(category)">{{ category.name }}</span></swiper-slide>
     </swiper>
     <h1 v-if="allPlaces?.length" class="title text-xl">Все рестораны</h1>
-    <div class="restaurants flex flex-wrap items-center" v-if="!loading">
+    <div class="restaurants sm:flex flex-wrap items-center" v-if="!loading">
       <div class="restaurant" v-for="(restaurant, i) in allPlaces" :key="i">
         <router-link :to="`vendors/${restaurant.id}`">
           <div class="restaurant-image">
@@ -47,6 +49,7 @@
       Показать еще
     </button>
     <div class="loading text-xxl" v-else><img src="@/assets/image/loading.gif" alt="loading"></div>
+    </div>
   </div>
 </template>
 
@@ -110,6 +113,7 @@ export default {
     currentId() {
         if(this.currentPlace == "restaurant") {
             try{
+                this.changeCurrentIdByManually("-1")
                 this.changeLoading(true)
                 this.getFilteredrRestaurants()
             } finally {
@@ -117,6 +121,7 @@ export default {
             }
         } else {
             try {
+                this.changeCurrentIdByManually("-1")
                 this.changeLoading(true)
                 this.getFilteredMarkets()
             } finally {
@@ -168,10 +173,10 @@ export default {
   },
   mounted() {
     try{
-        this.getCategoriesRestaurants();
-        this.changeLoading(true)
-        this.getRestaurants();
-        this.changeLoading(false)
+        // this.getCategoriesRestaurants();
+        // this.changeLoading(true)
+        // this.getRestaurants();
+        // this.changeLoading(false)
     } finally {
     }
   },
@@ -184,11 +189,13 @@ export default {
 }
 .tab-btn {
   background: #f0f0f0;
-  padding: 10px 15px;
+  padding: 10px;
+  display: inline-block;
   cursor: pointer;
-  margin: 10px;
-  text-align: center;
+  margin: 10px auto;
+  /* text-align: center; */
   transition: all ease 0.3s;
+  max-width: 250px;
 }
 .tab-btn:hover {
   background: #fde61d;
@@ -257,17 +264,8 @@ export default {
     color: #000;
     align-items: center;
     position: absolute;
-    top: 50%;
+    top: 30%;
     left: 40%;
 }
-@media screen and (max-width: 500px) {
-  .restaurant {
-    flex-basis: 100%;
-  }
-  .btn {
-    text-align: left;
-    margin-left: 0;
-    margin-bottom: 2rem;
-  }
-}
+
 </style>

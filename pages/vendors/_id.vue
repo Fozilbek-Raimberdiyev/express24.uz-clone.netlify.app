@@ -10,7 +10,7 @@
             <p class="categories mb-3" v-for="(category,index) in restaurant.categories" :key="index">{{category.name}}</p>
             <p class="booking-price">Заказы от: <span>{{restaurant.minCheckoutSum}} сум</span></p>
             <p class="delivery-time">Время доставки: <span>{{restaurant?.deliveryTimeRange?.min}}-{{restaurant?.deliveryTimeRange?.max}} мин</span></p>
-            <p class="delivery-price flex mt-2"><img src="@/assets/image/car.jpg" alt="delivery">Сумма доставки  <span>{{restaurant.deliveryPrice}}  сум</span></p>
+            <p class="delivery-price flex mt-2 items-center"><i class="bi bi-truck text-green-500 text-2xl mx-1 font-semibold"></i>Сумма доставки:  <span class="mx-1">{{restaurant.deliveryPrice}}  сум</span></p>
         </div>
         <div class="info-right flex">
             <button class="yellow-btn flex rounded items-center mr-2"><img src="@/assets/image/symbol-1.jpg"> Информации о заведении</button>
@@ -64,6 +64,7 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css");
 .container {
     width: 1150px;
     margin: 0 auto;
@@ -71,7 +72,7 @@ export default {
 .info-container {
     display: flex;
     align-items: center;
-    margin: 2rem 0;
+    margin: 4rem 0;
     flex-wrap: wrap;
 }
 .info-img {
@@ -109,7 +110,7 @@ export default {
     padding: 3px 15px;
     font-size: 14px;
 }
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 768px) {
         body {
             overflow-x: hidden;
         }

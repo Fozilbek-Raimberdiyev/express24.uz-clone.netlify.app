@@ -1,12 +1,11 @@
 <template>
-  <div class="flex items-center mt-10">
+  <div class="flex items-center tab">
     <div class="restaurant h-28 rounded-lg">
         <p @click="changePlace('restaurant')" class="title text-lg" :class="{resActive : currentPlace=='restaurant'}">Рестораны</p>
     </div>
     <div class="market h-28 rounded-lg">
         <p @click="changePlace('market')" class="title text-lg" :class="{marActive : currentPlace=='market'}">Маркет</p>
     </div>
-    <button @click="seeCurrentTab()">Ko'rish</button>
   </div>
 </template>
 
@@ -26,17 +25,16 @@ export default {
     methods : {
         ...mapMutations([
             "changePlace"
-        ]),
-        seeCurrentTab() {
-        // console.log(this.$store?.state?.currentTab)   
-        console.log(this.currentPlace) 
-    }
+        ])
     },
     
 } 
 </script>
 
 <style scoped>
+.tab {
+    margin-top: 7rem;
+}
     .restaurant {
         display: flex;
         flex-direction: column;
