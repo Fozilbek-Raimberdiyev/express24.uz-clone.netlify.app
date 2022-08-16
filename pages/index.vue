@@ -14,25 +14,12 @@ import NewsAndSales from '~/components/newsAndSales.vue'
 import tabBanner from '~/components/tabBanner.vue'
 import footerVue from '~/components/footer.vue'
 
-import {mapState} from "vuex"
+import {mapActions} from "vuex"
 export default {
   components: { tabBanner, NewsAndSales, MainComponent,footerVue },
   data() {
     return {
       title: "Сервис доставки еды и товаров",
-      isLoading: false
-    }
-  },
-  computed: {
-    ...mapState(["loading"])
-  },
-  watch : {
-    loading(newValue) {
-      if(newValue==true) {
-        this.isLoading = false
-      } else {
-        this.isLoading = true
-      }
     }
   },
   head() {
@@ -47,8 +34,8 @@ export default {
       ]
     }
   },
-  mounted() {
-    
+  methods: {
+    ...mapActions(["getRestaurants"])
   }
 }
 </script>

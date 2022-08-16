@@ -1,18 +1,16 @@
 <template>
-  <div class="wrapper">
+  <div v-if="$fetchState" class="wrapper">
     <div class="container">
       <swiper :options="options" class="tab flex flex-wrap items-center mt-10">
       <swiper-slide
-        class="tab-btn mb-3 mr-3 rounded-xl"
-        :class="{ active: currentIndex == index }"
+        class="tab-btn mb-3 rounded-xl"
         v-for="(category, index) in categories"
         :key="index"
-        @click="currentIndex=index"
         >
-        <span @click="changeCurrentId(category)">{{ category.name }}</span></swiper-slide>
+        <button @click="currentIndex=index"><span :class="{active : currentIndex==index}" @click="changeCurrentId(category)">{{ category.name }}</span></button></swiper-slide>
     </swiper>
-    <h1 v-if="allPlaces?.length" class="title text-xl">Все рестораны</h1>
-    <div class="restaurants sm:flex flex-wrap items-center" v-if="!loading">
+    <h1 class="title text-xl">Все рестораны</h1>
+    <div v-if="!$fetchState.pending" class="restaurants sm:flex flex-wrap items-center">
       <div class="restaurant" v-for="(restaurant, i) in allPlaces" :key="i">
         <router-link :to="`vendors/${restaurant.id}`">
           <div class="restaurant-image">
@@ -48,7 +46,7 @@
     <button v-if="allPlaces?.length" class="btn rounded" @click="seeMore">
       Показать еще
     </button>
-    <div class="loading text-xxl" v-else><img src="@/assets/image/loading.gif" alt="loading"></div>
+    <div v-if="$fetchState.pending" class="loading text-xxl"><img src="@/assets/image/loading.gif" alt="loading"></div>
     </div>
   </div>
 </template>
@@ -60,11 +58,14 @@ export default {
     return {
       categories: [],
       currentIndex: -1,
+      limit: 21,
+      places: [],
+      offset : 0,
       options: {
         slidesPerView: 8,
         breakpoints: {
           320: {
-            slidesPerView: 3,
+            slidesPerView: 2,
             spaceBetween: 20,
           },
           480: {
@@ -76,7 +77,7 @@ export default {
             spaceBetween: 40,
           },
           1000: {
-            slidesPerView: 8,
+            slidesPerView: 7.5,
             spaceBetween: 40,
           },
         },
@@ -87,25 +88,19 @@ export default {
     ...mapGetters({
       allPlaces: "allPlaces",
     }),
-    ...mapState(["currentPlace", "currentId", "loading", "filteredRestaurants", "filteredMarkets"]),
+    ...mapState(["currentPlace", "currentId", "filteredRestaurants", "filteredMarkets", "restaurants", "markets"]),
   },
   watch: {
     currentPlace: {
       handler(newPlace) {
         if (newPlace == "restaurant") {
-        this.changeCurrentIdByManually("-1")
+        this.changeCurrentIdByManually(-1)
         this.getRestaurants();
         this.getCategoriesRestaurants();
-        if(!this.filteredRestaurants.length) {
-            this.changeLoading(false)
-        }
         } else {
-        this.changeCurrentIdByManually("-1")
+        this.changeCurrentIdByManually(-1)
         this.getMarkets();
         this.getCategoriesMarkets();
-        if(!this.filteredMarkets.length) {
-            this.changeLoading(false)
-        }
         }
       },
       deep: true,
@@ -113,19 +108,13 @@ export default {
     currentId() {
         if(this.currentPlace == "restaurant") {
             try{
-                this.changeCurrentIdByManually("-1")
-                this.changeLoading(true)
                 this.getFilteredrRestaurants()
             } finally {
-                this.changeLoading(false)
             }
         } else {
             try {
-                this.changeCurrentIdByManually("-1")
-                this.changeLoading(true)
                 this.getFilteredMarkets()
             } finally {
-                this.changeLoading(false)
             }
         }
     },
@@ -154,32 +143,50 @@ export default {
     },
     async seeMore() {
       this.offset += this.limit;
-      if (this.categoryId == -1) {
+      if(this.currentPlace== "restaurant") {
+        if (this.currentId == -1) {
         let res = await fetch(
           `https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&limit=${this.limit}&offset=${this.offset}&cacheTime=600`
         );
         let resJson = await res.json();
-        this.restaurants = this.restaurants.concat(resJson.places);
+        // this.restaurants = ;
+        this.updateRestaurants(this.restaurants.concat(resJson.places))
       } else {
         let res = await fetch(
           `https://express24.uz/rest/v3/catalog/places-meta?root_category_id=1&d_width=720&d_height=330&category_id=${this.categoryId}&limit=${this.limit}&offset=${this.offset}&cacheTime=600`
         );
         let resJson = await res.json();
-        this.filteredRestaurants = this.filteredRestaurants.concat(resJson.places);
+        // this.filteredRestaurants = ;
+        this.updateFilteredRestaurants(this.filteredRestaurants.concat(resJson.places))
+        console.log(this.filteredRestaurants)
+      }
+      } else {
+        if (this.currentId == -1) {
+        let res = await fetch(
+          `https://express24.uz/rest/v3/catalog/places-meta?root_category_id=2&d_width=720&d_height=330&limit=${this.limit}&offset=${this.offset}&cacheTime=600`
+        );
+        let resJson = await res.json();
+        // this.markets = ;
+        this.updateMarkets(this.markets.concat(resJson.places))
+      } else {
+        let res = await fetch(
+          `https://express24.uz/rest/v3/catalog/places-meta?root_category_id=2&d_width=720&d_height=330&category_id=${this.categoryId}&limit=${this.limit}&offset=${this.offset}&cacheTime=600`
+        );
+        let resJson = await res.json();
+        // this.filteredMarkets = ;
+        this.updateFilteredMarkets(this.filteredMarkets.concat(resJson.places))
+        console.log(this.filteredMarkets)
+      }
       }
     },
     ...mapActions(["getRestaurants", "getMarkets", "getFilteredPlaces", "getFilteredrRestaurants", "getFilteredMarkets"]),
-    ...mapMutations(["changeCurrentId", "changeCurrentIdByManually", "changeLoading"]),
+    ...mapMutations(["changeCurrentId", "changeCurrentIdByManually", "updateRestaurants","updateFilteredRestaurants", "updateMarkets", "updateFilteredMarkets"]),
   },
-  mounted() {
-    try{
-        this.getCategoriesRestaurants();
-        this.changeLoading(true)
-        this.getRestaurants();
-        this.changeLoading(false)
-    } finally {
-    }
-  },
+
+  async fetch() {
+    await this.getCategoriesRestaurants();
+    await this.getRestaurants();
+  }
 };
 </script>
 
@@ -188,19 +195,20 @@ export default {
     position: relative;
 }
 .tab-btn {
+  margin: 10px 5px;
+}
+.tab-btn span {
   background: #f0f0f0;
-  padding: 10px;
+  padding: 5px 15px;
   display: inline-block;
   cursor: pointer;
-  margin: 10px auto;
-  /* text-align: center; */
   transition: all ease 0.3s;
-  max-width: 250px;
+  border-radius: 15px;
 }
-.tab-btn:hover {
+.tab-btn span:hover {
   background: #fde61d;
 }
-.tab-btn.active {
+.tab-btn span.active {
   background: #fde61d;
 }
 .restaurants {

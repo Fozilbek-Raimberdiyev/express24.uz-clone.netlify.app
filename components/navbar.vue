@@ -29,79 +29,71 @@
             </header>
         </div>
 
-    <div class="res-menu" :class="{open : isOpen}">
-        <div class="res-container" :class="{close : !isOpen}">
+    <div class="res-menu">
+        <div class="res-container">
             <div class="res-navbar md:hidden flex items-center justify-between text-gray-100 bg-gray-900 absolute left-0 right-0 top-0 py-4 font-semibold text-sm">
-            <div class="res-icon-menu"><i @click="openMenu()" class="bi bi-list"></i></div>
+            <div class="res-icon-menu"><i @click="toggle=true" class="bi bi-list"></i></div>
             <div class="res-logo flex items-center"><img src="@/static/favicon.png" alt="logo"><span>Express24</span></div>
             <div class="res-search"><i class="bi bi-search"></i></div>
         </div>
-        <div class="res-left-modal md:hidden fixed bg-white">
-            <i @click="closeMenu()" class="bi bi-x absolute text-white text-lg right-5 top-5 cursor-pointer"></i>
-            <div class="res-location bg-gray-900 px-5 pt-8 pb-5 text-gray-100 text-sm">
-                <div class="res-top-location flex items-center">
-                    <i class="bi bi-compass text-green-400 text-4xl mr-2"></i>
-                    <p class="addres-text text-sm">Адрес не указан</p>
+        <b-sidebar  shadow v-model="toggle" :no-close-on-backdrop="true"> 
+            <template>
+                    <div class="res-left-modal md:hidden fixed bg-white">
+                    <i @click="toggle=false" class="bi bi-x absolute text-white text-lg right-5 top-5 cursor-pointer"></i>
+                    <div class="res-location bg-gray-900 px-5 pt-8 pb-5 text-gray-100 text-sm">
+                        <div class="res-top-location flex items-center">
+                            <i class="bi bi-compass text-green-400 text-4xl mr-2"></i>
+                            <p class="addres-text text-sm">Адрес не указан</p>
+                        </div>
+                        <div class="bottom">Ваше местоположение неопределено</div>
+                    </div>
+                    <div class="res-select my-4">
+                    <select>
+                        <option value="rus">Русский</option>
+                        <option value="eng">English</option>
+                        <option value="uzb">O'zbek</option>
+                    </select>
                 </div>
-                <div class="bottom">Ваше местоположение неопределено</div>
-            </div>
-            <div class="res-select my-4">
-            <select>
-                <option value="rus">Русский</option>
-                <option value="eng">English</option>
-                <option value="uzb">O'zbek</option>
-            </select>
-        </div>
-        <nav class="res-left-modal-navigation px-5">
-            <div class="res-sign-form flex items-center">
-            <div class="res-sign-in flex">
-                <i class="bi bi-person"></i>
-                <p>Вход</p>
-            </div>
-            <div class="res-sign-up">
-                <p>Регистрация</p>
-            </div>
-        </div>
-        <div class="res-home flex">
-            <i class="bi bi-house"></i>
-            <p>Главная страница</p>
-        </div>
-        <div class="res-basket flex">
-            <i class="bi bi-cart3"></i>
-            <p>Корзина</p>
-        </div>
-        </nav>
-        <div class="res-social-links flex justify-between">
-            <i class="bi bi-facebook"></i>
-            <i class="bi bi-instagram"></i>
-            <i class="bi bi-telegram"></i>
-        </div>
-        </div>
+                <nav class="res-left-modal-navigation px-5">
+                    <div class="res-sign-form flex items-center">
+                    <div class="res-sign-in flex">
+                        <i class="bi bi-person"></i>
+                        <p>Вход</p>
+                    </div>
+                    <div class="res-sign-up">
+                        <p>Регистрация</p>
+                    </div>
+                </div>
+                <div class="res-home flex">
+                    <i class="bi bi-house"></i>
+                    <p><router-link to="/">Главная страница</router-link></p>
+                </div>
+                <div class="res-basket flex">
+                    <i class="bi bi-cart3"></i>
+                    <p>Корзина</p>
+                </div>
+                </nav>
+                <div class="res-social-links flex justify-between">
+                    <i class="bi bi-facebook"></i>
+                    <i class="bi bi-instagram"></i>
+                    <i class="bi bi-telegram"></i>
+                </div>
+                </div>
+            </template>
+            </b-sidebar>
         </div>
     </div>
-
     </div>
 </template>
 
 <script>
-import {mapState,mapMutations} from "vuex"
 export default {
     data() {
         return {
-            // isOpen : false
+            toggle: false
         }
     },
     computed: {
-     ...mapState(["isOpen"])
-    },
-    methods : {
-        openMenu() {
-            this.changeIsopen(true);
-        },
-        closeMenu() {
-            this.changeIsopen(false);
-        },
-        ...mapMutations(["changeIsopen"])
     },
     mounted() {
     }
@@ -134,6 +126,7 @@ export default {
 }
 .addres {
     margin: 0 1rem;
+    flex-basis: 20%;
 }
 .login-page {
     margin-left: 1rem;
@@ -162,11 +155,8 @@ export default {
 .res-left-modal {
     transition: all ease-in .3s;
 }
-.res-menu.open .res-left-modal {
-    left: 0 !important;
-}
-.res-container.close .res-left-modal {
-    left: -250% !important;
+a:hover *{
+    text-decoration: none !important;
 }
 @media screen and (max-width: 768px){
     .container {

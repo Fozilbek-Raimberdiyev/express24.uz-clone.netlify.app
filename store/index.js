@@ -5,7 +5,6 @@ export const state = () => ({
     markets: [],
     filteredMarkets: [],
     currentId: -1,
-    currentIndex: -1,
     loading: false,
     isOpen :false
   })
